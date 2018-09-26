@@ -68,7 +68,7 @@ fix DensAve all ave/time ${N_every} ${N_repeat} ${N_freq} v_Dens file wat.dens
 
 ## output settings
 
-thermo_style custom step f_TempAve f_PressAve 
+thermo_style custom step f_TempAve f_PressAve f_DensAve f_PEAve_Mol
 thermo_modify flush yes
 thermo ${N_freq}
 
