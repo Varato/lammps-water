@@ -1,0 +1,21 @@
+# Optimized TIP3P parameters to use with Ewald methods for long-range
+# electrostatics. From Price & Brooks, J Chem Phys 121:10096 (2004).
+# Note that in the original reference the model is named B or TIP3P-PME.
+# Charges and geometry are specified in the "data." file.
+
+mass 1 1.00794 # H
+mass 2 15.9994 # O
+
+pair_style lj/cut/coul/long 13.0
+pair_modify tail no
+kspace_style pppm 1.0e-5
+
+pair_coeff 1 1 0.000 0.000	
+pair_coeff 1 2 0.000 0.000	
+pair_coeff 2 2 0.102 3.188
+
+bond_style harmonic
+bond_coeff 1 450.0 0.9572
+
+angle_style harmonic
+angle_coeff 1 55.0 104.52 

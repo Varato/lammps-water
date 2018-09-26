@@ -1,0 +1,103 @@
+# Reference: M. Orsi, Comparative assessment of the ELBA coarse-grained 
+# model for water, Molecular Physics (2014), 112, 1566-1576
+
+## ==================== initialization ====================
+
+units real
+dimension 3
+boundary p p p
+atom_style full
+
+## ==================== atom definition ===================
+read_data data.singleSPC
+replicate 10 10 10 
+group hydrogen type 1
+group oxygen type 2
+
+## ====================== force field =====================
+include forcefield.SPC
+
+## ======================= variables ======================
+
+variable T_room equal 298.0       # room temperature
+variable P_room equal 1.0         # room pressure
+variable T_nitrogen equal 77.0      # boiling point of liquid nitrogen
+variable T_max equal 136.15       # max temperature that wate maintains vitrified
+
+variable N_room equal 1000        # num of steps for room temperature equlibrium
+variable N_vitrify equal 1000     # num of steps for vitrifying (cooling down)
+variable N_relexation equal 1000  # num of steps for stablization at low temperature
+
+variable N_freq equal 100         # every N_freq steps the fix ave/time is functioned
+variable N_every equal 10         # in the N_freq steps, every other 10 points are picked up
+variable N_repeat equal ${N_freq}/${N_every}  # N_repeat points are picked up
+variable N_dump equal 100
+
+variable watMoleMass equal 18.0153 # /(g/mol)
+variable nAvog equal 6.0221415e23  # Avogadro's number
+variable watMoleculeMass equal (${watMoleMass}/${nAvog}) # /(g/molecule)
+variable A3_in_cm3 equal 1e-24     # Angstrom^3 in cm^3
+variable nAtoms equal atoms
+variable nMolecules equal v_nAtoms/3
+
+
+## ================== simulation settings ==================
+
+velocity all create ${T_room} 1234
+neighbor 2.0 bin
+neigh_modify every 1 delay 0 check yes
+timestep 5.0
+
+# basic fixes
+fix constrain all shake 1.0e-4 100 0 b 1 a 1      # bond and angle constraints
+fix removeMomentum all momentum 100 linear 1 1 1  # zero linear momentum of the whole system every 100 steps
+
+compute T all temp
+fix TempAve all ave/time ${N_every} ${N_repeat} ${N_freq} c_T file wat.temp
+
+compute P all pressure T
+fix PressAve all ave/time ${N_every} ${N_repeat} ${N_freq} c_P file wat.pres
+
+compute PE all pe pair kspace
+variable PE_Mol equal c_PE/v_nMolecules
+fix PEAve_Mol all ave/time ${N_every} ${N_repeat} ${N_freq} v_PE_Mol file wat.pe
+
+variable Dens equal v_nMolecules*${watMoleculeMass}/(vol*${A3_in_cm3})  # density in g/cm3
+fix DensAve all ave/time ${N_every} ${N_repeat} ${N_freq} v_Dens file wat.dens
+
+
+## output settings
+
+thermo_style custom step f_TempAve f_PressAve 
+thermo_modify flush yes
+thermo ${N_freq}
+
+dump trj all atom ${N_dump} wat.lammpstrj
+dump img all image ${N_dump} wat.*.jpg type type
+
+
+## ==================== main simulation ====================
+
+# initial stablization at room temperature
+fix room all npt temp ${T_room} ${T_room} 100.0 iso ${P_room} ${P_room} 1000.0
+run ${N_room}
+unfix room
+
+# fast cooling down to liquid nitrogen temperature
+fix nitrogen all npt temp ${T_room} ${T_nitrogen} 100.0 iso ${P_room} ${P_room} 1000.0
+run ${N_vitrify}
+unfix nitrogen
+
+# final relexation in vaccum
+fix undergo all npt temp ${T_nitrogen} ${T_nitrogen} 100.0 iso 0.5 0.5 1000
+run ${N_relexation}
+unfix undergo
+
+
+#write_restart restart.wat
+
+
+
+
+
+
