@@ -73,7 +73,7 @@ thermo_modify flush yes
 thermo ${N_freq}
 
 dump trj all atom ${N_dump} wat.lammpstrj
-dump img all image ${N_dump} wat.*.jpg type type
+#dump img all image ${N_dump} wat.*.jpg type type
 
 
 ## ==================== main simulation ====================

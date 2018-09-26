@@ -1,0 +1,59 @@
+LAMMPS (11 Aug 2017)
+Reading data file ...
+  orthogonal box = (0 0 0) to (3.1 3.1 3.1)
+  3 by 4 by 4 MPI processor grid
+  reading atoms ...
+  3 atoms
+  scanning bonds ...
+  2 = max bonds/atom
+  scanning angles ...
+  1 = max angles/atom
+  reading bonds ...
+  2 bonds
+  reading angles ...
+  1 angles
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:   0          0          0         
+  special bond factors coul: 0          0          0         
+  2 = max # of 1-2 neighbors
+  1 = max # of 1-3 neighbors
+  1 = max # of 1-4 neighbors
+  2 = max # of special neighbors
+Replicating atoms ...
+  orthogonal box = (0 0 0) to (133.3 133.3 310)
+  2 by 3 by 8 MPI processor grid
+  554700 atoms
+  369800 bonds
+  184900 angles
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:   0          0          0         
+  special bond factors coul: 0          0          0         
+  2 = max # of 1-2 neighbors
+  1 = max # of 1-3 neighbors
+  1 = max # of 1-4 neighbors
+  2 = max # of special neighbors
+369800 atoms in group hydrogen
+184900 atoms in group oxygen
+Finding SHAKE clusters ...
+  0 = # of size 2 clusters
+  0 = # of size 3 clusters
+  0 = # of size 4 clusters
+  184900 = # of frozen angles
+ERROR: Support for writing images in JPEG format not included (../dump_image.cpp:85)
+Last command: dump img all image ${N_dump} wat.*.jpg type type
+======================================================================================
+
+			Resource Usage on 2018-09-26 21:02:03.025590:
+
+	JobId: 7651283.wlm01  
+	Project: personal-e0020415 
+	Exit Status: 1
+	NCPUs Requested: 48				NCPUs Used: 48
+							CPU Time Used: 00:00:13
+	Memory Requested: 192gb 				Memory Used: 1424kb
+							Vmem Used: 13392kb
+	Walltime requested: 24:00:00 			Walltime Used: 00:00:04
+	
+	Execution Nodes Used: (std1655:ncpus=24:mem=100663296kb)+(std1656:ncpus=24:mem=100663296kb)
+	
+ ======================================================================================
