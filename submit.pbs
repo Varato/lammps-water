@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -P project_lmp
+#PBS -j oe
+#PBS -N lmp_water_vitrify
+
+###Submit jobs to queue parallel24 with 2*24 threads. 
+#PBS -q parallel24
+#PBS -l select=2:ncpus=24:mpiprocs=24:mem=20GB
+#PBS -l walltime=32:00:00
+
+###For submitting jobs to parallel12 queue to run on two nodes
+###PBS -q parallel12
+###PBS -l select=2:ncpus=12:mpiprocs=12:mem=10GB
+
+cd $PBS_O_WORKDIR;   ## this line is needed, do not delete.
+np=$(cat ${PBS_NODEFILE} | wc -l );  ### get number of CPUs
+source /etc/profile.d/rec_modules.sh
+module load lammps_gmp_2018;
+
+export LAM=`which lmp_mpi`
+
+mpirun -np $np -f ${PBS_NODEFILE} $LAM < in.water_vitrify
+
